@@ -73,7 +73,8 @@ app.get('/callback', function(req, res, callback) {
 			}
 			else {
 				token[req.query.state] = body.access_token;
-				res.redirect(github.redirect + (redirect[req.query.state] || '') + '#' + req.query.state);
+				res.redirect((redirect[req.query.state].indexOf('http') == 0) ?
+					 redirect[req.query.state] : (github.redirect + (redirect[req.query.state] || '') + '#' + req.query.state));
 			}
 	    });
 });
