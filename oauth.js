@@ -64,10 +64,9 @@ app.get('/callback', function(req, res, callback) {
 			  	 + '&state=' + req.query.state,
 			json: true
 		},
-		function (error, token, body) {
+		function (error, _, body) {
 			if (error) {
 				error.body = body;
-				error.token = token;
 				callback(error);
 			}
 			else {
