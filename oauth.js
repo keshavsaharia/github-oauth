@@ -54,11 +54,11 @@ app.get('/', function(req, res) {
 app.get('/callback', function(req, res, callback) {
 	// If there is no callback code
 	if (! req.query.code)
-		res.status(400).send('{ "error": "no_code" }');
+		res.status(200).send('{ "error": "no_code" }');
 
 	// If there is a mismatch in the random generated state (prevent cross-site attacks)
 	else if (! req.query.state || token[req.query.state] !== false)
-		res.status(400).send('{ "error": "invalid_state" }');
+		res.status(200).send('{ "error": "invalid_state" }');
 
 	// Retrieve the access token for the user
 	else
@@ -89,11 +89,13 @@ app.get('/callback', function(req, res, callback) {
  *  Passes the one-time query parameter
  */
 app.get('/token', function(req, res) {
+	res.header('Access-Control-Allow-Origin', '*');
+
 	if (! req.query.token)
-		res.status(400).send('{ "error": "no_token" }');
+		res.status(200).send('{ "error": "no_token" }');
 
 	else if (token[req.query.token] == null) {
-		res.status(400).send('{ "error": "expired_token", "token": "' + req.query.token + '" }');
+		res.status(200).send('{ "error": "expired_token", "token": "' + req.query.token + '" }');
 	}
 
 	// One-time token handoff
