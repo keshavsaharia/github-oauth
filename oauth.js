@@ -72,6 +72,7 @@ app.get('/callback', function(req, res, callback) {
 			}
 			else {
 				token[req.query.state] = body.access_token;
+				console.log(req.query.state + ' -> ' + body.access_token);
 				res.redirect(redirect[req.query.state] + '#' + req.query.state);
 				delete redirect[req.query.state];
 			}
