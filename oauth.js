@@ -2,9 +2,13 @@ var app = require('express')(),
 	request = require('request'),
 	crypto = require('crypto');
 
+// Contains a JSON object with configuration data. See
+// github-example.json for information on the keys.
 var github = require('./github.json');
+
+
 /**
-github.json contains a simple object with configuration data. You can also initialize it here.
+// You can also directly initialize the GitHub configuration here
 
 var github = {
 	"redirect": "http://url-of-your-application.com",
@@ -32,7 +36,9 @@ app.get('/', function(req, res) {
 	token[state] = false;
 
 	// Set the redirect if there is one
-	redirect[state] = ((req.query.localhost) ? 'http://localhost:8000' : github.redirect) + (req.query.redirect || '');
+	redirect[state] = ((req.query.localhost) ?
+		(github.localhost || 'http://localhost:8000') : github.redirect) +
+		(req.query.redirect || '');
 
 	// Redirect to GitHub
 	res.setHeader('location',
@@ -71,7 +77,6 @@ app.get('/callback', function(req, res, callback) {
 			}
 			else {
 				token[req.query.state] = body.access_token;
-				console.log(req.query.state + ' -> ' + body.access_token);
 				res.redirect(redirect[req.query.state] + '#' + req.query.state);
 				delete redirect[req.query.state];
 			}
@@ -88,21 +93,15 @@ app.get('/token', function(req, res) {
 		res.status(400).send('{ "error": "no_token" }');
 
 	else if (token[req.query.token] == null) {
-		console.log(req.query.token);
-		res.status(400).send('{ "error": "expired_token" }');
+		res.status(400).send('{ "error": "expired_token", "token": "' + req.query.token + '" }');
 	}
 
 	// One-time token handoff
 	else {
 		var t = token[req.query.token];
-		console.log('token: ' + t);
-		//delete token[req.query.token];
+		delete token[req.query.token];
 		res.status(200).send('{ "success": "true", "token": "' + t + '" }');
 	}
-});
-
-app.get('/debug', function(req, res) {
-	res.send(JSON.stringify(token));
 });
 
 // Start the server on the default port
