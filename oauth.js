@@ -32,15 +32,17 @@ app.get('/', function(req, res) {
 	token[state] = false;
 
 	// Set the redirect if there is one
-	if (req.query.redirect)
-		redirect[state] = ((req.query.redirect.indexOf('/') == 0) ? '' : '/') + req.query.redirect;
+	redirect[state] =
+		((req.query.localhost) ? 'http://localhost:8000' : github.redirect) +	// Base URL
+		((req.query.redirect.indexOf('/') == 0) ? '' : '/') +					// Separator between URL and redirect
+		(req.query.redirect || '');												// Optional redirect parameter
 
 	// Redirect to GitHub
 	res.setHeader('location',
 		'https://github.com/login/oauth/authorize?state=' + state
-	  	  + '&client_id=' + github.client
-	  	  + '&scope=' + github.scope
-	  	  + '&redirect_uri=' + github.url + '/callback'
+	  	+ '&client_id=' + github.client
+	  	+ '&scope=' + github.scope
+	  	+ '&redirect_uri=' + github.url + '/callback'
 	  );
 	res.end();
 });
@@ -73,8 +75,8 @@ app.get('/callback', function(req, res, callback) {
 			}
 			else {
 				token[req.query.state] = body.access_token;
-				res.redirect((redirect[req.query.state].indexOf('http') == 0) ?
-					 redirect[req.query.state] : (github.redirect + (redirect[req.query.state] || '') + '#' + req.query.state));
+				delete redirect[res.query.state];
+				res.redirect(redirect[req.query.state] + '#' + req.query.state);
 			}
 	    });
 });
@@ -95,7 +97,6 @@ app.get('/token', function(req, res) {
 	else {
 		var t = token[res.query.token];
 		delete token[res.query.token];
-		delete redirect[res.query.token];
 		res.status(200).send('{ "error": "", "token": "' + t + '" }');
 	}
 });
