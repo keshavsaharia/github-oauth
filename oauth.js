@@ -74,7 +74,7 @@ app.get('/callback', function(req, res, callback) {
 			}
 			else {
 				token[req.query.state] = body.access_token;
-				delete redirect[res.query.state];
+				delete redirect[req.query.state];
 				res.redirect(redirect[req.query.state] + '#' + req.query.state);
 			}
 	    });
