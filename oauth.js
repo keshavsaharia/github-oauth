@@ -33,9 +33,8 @@ app.get('/', function(req, res) {
 
 	// Set the redirect if there is one
 	redirect[state] =
-		((req.query.localhost) ? 'http://localhost:8000' : github.redirect) +	// Base URL
-		((req.query.redirect.indexOf('/') == 0) ? '' : '/') +					// Separator between URL and redirect
-		(req.query.redirect || '');												// Optional redirect parameter
+		((req.query.localhost) ? 'http://localhost:8000' : github.redirect) +
+		((req.query.redirect) ? (((req.query.redirect.indexOf('/') == 0) ? '' : '/') + req.query.redirect) : '');
 
 	// Redirect to GitHub
 	res.setHeader('location',
