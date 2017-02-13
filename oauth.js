@@ -102,6 +102,10 @@ app.get('/token', function(req, res) {
 	}
 });
 
+app.get('/debug', function(req, res) {
+	res.send(JSON.stringify(token));
+});
+
 // Start the server on the default port
 app.listen(github.port || 80, function() {
 	console.log('Server started.');
