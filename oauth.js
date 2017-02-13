@@ -32,9 +32,7 @@ app.get('/', function(req, res) {
 	token[state] = false;
 
 	// Set the redirect if there is one
-	redirect[state] =
-		((req.query.localhost) ? 'http://localhost:8000' : github.redirect) +
-		((req.query.redirect) ? (((req.query.redirect.indexOf('/') == 0) ? '' : '/') + req.query.redirect) : '');
+	redirect[state] = ((req.query.localhost) ? 'http://localhost:8000' : github.redirect) + (req.query.redirect || '');
 
 	// Redirect to GitHub
 	res.setHeader('location',
@@ -74,8 +72,8 @@ app.get('/callback', function(req, res, callback) {
 			}
 			else {
 				token[req.query.state] = body.access_token;
-				delete redirect[req.query.state];
 				res.redirect(redirect[req.query.state] + '#' + req.query.state);
+				delete redirect[req.query.state];
 			}
 	    });
 });
