@@ -84,16 +84,16 @@ app.get('/callback', function(req, res, callback) {
  *  Passes the one-time query parameter
  */
 app.get('/token', function(req, res) {
-	if (! res.query.token)
+	if (! req.query.token)
 		res.status(400).send('{ "error": "no_token" }');
 
-	else if (! token[res.query.token])
+	else if (! token[req.query.token])
 		res.status(400).send('{ "error": "expired_token" }');
 
 	// One-time token handoff
 	else {
-		var t = token[res.query.token];
-		delete token[res.query.token];
+		var t = token[req.query.token];
+		delete token[req.query.token];
 		res.status(200).send('{ "error": "", "token": "' + t + '" }');
 	}
 });
