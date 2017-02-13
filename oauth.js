@@ -88,7 +88,7 @@ app.get('/token', function(req, res) {
 	if (! req.query.token)
 		res.status(400).send('{ "error": "no_token" }');
 
-	else if (! token[req.query.token]) {
+	else if (token[req.query.token] == null) {
 		console.log(req.query.token);
 		res.status(400).send('{ "error": "expired_token" }');
 	}
@@ -96,6 +96,7 @@ app.get('/token', function(req, res) {
 	// One-time token handoff
 	else {
 		var t = token[req.query.token];
+		console.log('token: ' + t);
 		//delete token[req.query.token];
 		res.status(200).send('{ "success": "true", "token": "' + t + '" }');
 	}
