@@ -38,12 +38,12 @@ app.get('/', function(req, res) {
 	var state = crypto.randomBytes(16).toString('hex');
 	token[state] = false;
 
-	if (! multiGithub[req.host]) {
+	if (! multiGithub[req.hostname]) {
 		res.send('{ "error": "invalid_host" }');
 		return;
 	}
 
-	github[state] = multiGithub[req.host];
+	github[state] = multiGithub[req.hostname];
 
 	// Set the redirect if there is one
 	redirect[state] = ((req.query.localhost) ?
