@@ -30,7 +30,7 @@ if (oneTimePassword) {
 				// Use the token
 			}
 			else console.error(res);
-                }
+		}
 	};
 	
 	// Make a GET request to the authentication server
