@@ -23,18 +23,13 @@ if (oneTimePassword) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4) {
-			
-			// Clear the hash
 			window.location.hash = '';
-
-                    	// Parse the result and save the token if successful
 	                var res = JSON.parse(xhttp.responseText);
-                    	if (res.success) {
+			if (res.success) {
 				console.log('Token: ' + res.token);
+				// Use the token
 			}
-			else {
-				console.error(res);
-			}
+			else console.error(res);
                 }
 	};
 	
